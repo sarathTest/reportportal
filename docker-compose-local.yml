@@ -10,37 +10,29 @@
 
 version: '2'
 
-## Create separate volume for Redis and MongoDB data
-## See https://docs.docker.com/compose/compose-file/#/volume-configuration-reference
-volumes:
-  reportportal-data:
-    # external: true
-
 services:
   redis:
     image: redis:3.2
     ## Uncomment if needed
-    # ports:
-    #   - "6379:6379"
-    volumes:
-      - reportportal-data:/data
+    ports:
+      - "6379:6379"
     restart: always
 
   mongodb:
     image: mongo:3.2
     ## Uncomment if needed
-    # ports:
-    #     - "27017:27017"
+    ports:
+        - "27017:27017"
     volumes:
-      - reportportal-data:/data/db
+      - ./reportportal-data/mongo:/data/db
     restart: always
     ## Consider disabling smallfiles for production usage
     command: --smallfiles
 
   registry:
     image: reportportal/service-registry:2.7.1
-    # ports:
-    #   - "8761:8761"
+    ports:
+      - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=native
       - com.ta.reportportal.eureka.hostname=registry
@@ -58,8 +50,8 @@ services:
       - reportportal.config.server.host=registry
       - SPRING_PROFILES_ACTIVE=docker
       - rp.session.live=86400
-      - github.client.clientId=f4cec43d4541283879c4
-      - github.client.clientSecret=a31aa6de3e27c11d90762cad11936727d6b0759e
+      - github.client.clientId=205435688ea4be20bb38
+      - github.client.clientSecret=438778415433c41d515cc5264133a8b084a83a1d
     # - rp.mongo.host=XXX
     # - rp.mongo.port=27017
     # - rp.mongo.dbName=reportportal
@@ -108,6 +100,20 @@ services:
 
   jira:
     image: reportportal/service-jira:2.7.1
+    depends_on:
+      - registry
+    environment:
+      - reportportal.config.server.host=registry
+      - SPRING_PROFILES_ACTIVE=docker
+    # - rp.mongo.host=XXX
+    # - rp.mongo.port=27017
+    # - rp.mongo.dbName=reportportal
+    # - rp.mongo.user=XXX
+    # - rp.mongo.password=XXX
+    restart: always
+
+  rally:
+    image: reportportal/service-rally:2.7.1
     depends_on:
       - registry
     environment:

@@ -1,0 +1,83 @@
+################################################################
+# Global configuration
+################################################################
+# port = ":80"
+logLevel = "DEBUG"
+debug = true
+accessLogsFile = "/log/access.log"
+
+defaultEntryPoints = ["http"]
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+      [entryPoints.http.redirect]
+        # regex = "(http:\\/\\/[^\\/]+)\\/?$"
+        regex = "(http://[^\\/]+)/?$"
+        replacement = "$1/ui/"
+
+################################################################
+# Web configuration backend
+################################################################
+
+[web]
+address = ":8080"
+
+################################################################
+# Consul KV configuration backend
+################################################################
+
+# Enable Consul KV configuration backend
+#
+# Optional
+#
+# [consul]
+
+# Consul server endpoint
+#
+# Required
+#
+# endpoint = "10.200.10.1:8500"
+
+# Enable watch Consul changes
+#
+# Optional
+#
+# watch = true
+
+# Prefix used for KV store.
+#
+# Optional
+#
+# prefix = "traefik"
+
+# Override default configuration template. For advanced users :)
+#
+# Optional
+#
+# filename = "consul.tmpl"
+
+# Enable consul TLS connection
+#
+# Optional
+#
+# [consul.tls]
+# ca = "/etc/ssl/ca.crt"
+# cert = "/etc/ssl/consul.crt"
+# key = "/etc/ssl/consul.key"
+# insecureskipverify = true
+
+################################################################
+# Consul Catalog configuration backend
+################################################################
+
+# Enable Consul Catalog configuration backend
+#
+# Optional
+#
+[consulCatalog]
+
+# Consul server endpoint
+#
+# Required
+#
+endpoint = "10.200.10.1:8500"
