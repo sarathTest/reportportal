@@ -10,7 +10,7 @@
 ##      '-d' -- enables daemon mode
 ##      '--force-recreate' -- forces re-recreating of all containers
 
-version: '2'
+version: '2.1'
 
 services:
 
